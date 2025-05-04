@@ -15,9 +15,6 @@ const nextConfig = {
     ],
   },
   // Disable ESLint during build
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   // Configure Turbopack (Next.js 15 stable version)
   turbopack: {
     // Turbo configuration here if needed
