@@ -18,10 +18,6 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  // Disable TypeScript checking during build
-  typescript: {
-    ignoreBuildErrors: true,
-  },
   // Configure Turbopack (Next.js 15 stable version)
   turbopack: {
     // Turbo configuration here if needed

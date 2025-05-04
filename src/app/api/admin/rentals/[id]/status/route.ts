@@ -2,12 +2,16 @@ import { NextRequest, NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 import type { RentalStatus } from "@/types"
 
+type ParamsType = Promise<{ id: string }>
+
 // PATCH /api/admin/rentals/[id]/status - Update rental status
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: ParamsType }
 ) {
   try {
+    const { id } = await params
+    
     const body = await request.json()
     
     if (!body.status) {
@@ -29,7 +33,7 @@ export async function PATCH(
     // Find rental
     const rental = await prisma.rental.findUnique({
       where: {
-        id: params.id,
+        id,
       },
       include: {
         vehicle: true,
@@ -59,7 +63,7 @@ export async function PATCH(
       // Update rental status
       prisma.rental.update({
         where: {
-          id: params.id,
+          id,
         },
         data: {
           status: body.status,

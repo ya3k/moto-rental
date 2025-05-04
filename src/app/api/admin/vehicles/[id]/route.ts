@@ -1,19 +1,18 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 
-interface RouteParams {
-  params: {
-    id: string
-  }
-}
+type ParamsType = Promise<{ id: string }>
 
 // GET /api/admin/vehicles/[id] - Get vehicle by ID
-export async function GET(request: Request, { params }: RouteParams) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: ParamsType }
+) {
   try {
+    const { id } = await params
+    
     const vehicle = await prisma.vehicle.findUnique({
-      where: {
-        id: params.id,
-      },
+      where: { id },
     })
     
     if (!vehicle) {
@@ -34,15 +33,17 @@ export async function GET(request: Request, { params }: RouteParams) {
 }
 
 // PUT /api/admin/vehicles/[id] - Update a vehicle
-export async function PUT(request: Request, { params }: RouteParams) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: ParamsType }
+) {
   try {
+    const { id } = await params
     const body = await request.json()
     
     // Check if vehicle exists
     const existingVehicle = await prisma.vehicle.findUnique({
-      where: {
-        id: params.id,
-      },
+      where: { id },
     })
     
     if (!existingVehicle) {
@@ -70,9 +71,7 @@ export async function PUT(request: Request, { params }: RouteParams) {
     
     // Update vehicle
     const updatedVehicle = await prisma.vehicle.update({
-      where: {
-        id: params.id,
-      },
+      where: { id },
       data: {
         name: body.name,
         type: body.type,
@@ -95,13 +94,16 @@ export async function PUT(request: Request, { params }: RouteParams) {
 }
 
 // DELETE /api/admin/vehicles/[id] - Delete a vehicle
-export async function DELETE(request: Request, { params }: RouteParams) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: ParamsType }
+) {
   try {
+    const { id } = await params
+    
     // Check if vehicle exists
     const existingVehicle = await prisma.vehicle.findUnique({
-      where: {
-        id: params.id,
-      },
+      where: { id },
       include: {
         rentals: {
           take: 1, // Just checking if there's any related rental
@@ -131,9 +133,7 @@ export async function DELETE(request: Request, { params }: RouteParams) {
     
     // Delete vehicle
     await prisma.vehicle.delete({
-      where: {
-        id: params.id,
-      },
+      where: { id },
     })
     
     return NextResponse.json(
