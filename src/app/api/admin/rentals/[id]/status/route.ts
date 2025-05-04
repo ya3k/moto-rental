@@ -1,11 +1,10 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 import type { RentalStatus } from "@/types"
 
-// Next.js expects this specific type format for dynamic route parameters
 // PATCH /api/admin/rentals/[id]/status - Update rental status
 export async function PATCH(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {

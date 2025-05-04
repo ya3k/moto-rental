@@ -6,7 +6,6 @@ import { VehicleFilter } from "@/components/vehicles/VehicleFilter"
 import type { Vehicle, VehicleType } from "@/types"
 
 export default function HomePage() {
-  const [vehicles, setVehicles] = useState<Vehicle[]>([])
   const [filteredVehicles, setFilteredVehicles] = useState<Vehicle[]>([])
   const [selectedType, setSelectedType] = useState<VehicleType | null>(null)
   const [loading, setLoading] = useState(true)
@@ -34,7 +33,6 @@ export default function HomePage() {
         const data = await response.json()
         console.log(`Fetched ${data.length} vehicles`)
         
-        setVehicles(data)
         setFilteredVehicles(data)
       } catch (err) {
         console.error("Error fetching vehicles:", err)
