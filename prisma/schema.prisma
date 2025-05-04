@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl  = env("DIRECT_URL") 
+}
+
+model Rental {
+  id                String        @id @default(uuid())
+  customerName      String
+  customerPhone     String
+  vehicle           Vehicle       @relation(fields: [vehicleId], references: [id])
+  vehicleId         String
+  pickUpLocation    Location      @relation("PickUp", fields: [pickUpLocationId], references: [id])
+  pickUpLocationId  String
+  dropOffLocation   Location      @relation("DropOff", fields: [dropOffLocationId], references: [id])
+  dropOffLocationId String
+  pickUpTime        DateTime
+  dropOffTime       DateTime
+  status            RentalStatus  @default(PENDING)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+}
+
+model Vehicle {
+  id            String         @id @default(uuid())
+  name          String         // Tên xe: Wave Alpha, Air Blade, Vision...
+  type          VehicleType
+  licensePlate  String         @unique  // Biển số xe
+  imageUrl      String?        // URL hình ảnh xe
+  pricePerDay   Decimal        @db.Decimal(10, 2)  // Giá thuê theo ngày
+  status        VehicleStatus  @default(AVAILABLE)
+  description   String?        // Mô tả thêm về xe
+  rentals       Rental[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model Location {
+  id               String   @id @default(uuid())
+  name             String
+  address          String
+  isActive         Boolean  @default(true)
+  pickUps          Rental[] @relation("PickUp")
+  dropOffs         Rental[] @relation("DropOff")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+enum VehicleType {
+  TAY_GA
+  XE_SO
+}
+
+enum VehicleStatus {
+  AVAILABLE    // Có thể thuê
+  RENTED       // Đang được thuê
+  MAINTENANCE  // Đang bảo trì
+}
+
+enum RentalStatus {
+  PENDING    // Chờ xác nhận
+  CONFIRMED  // Đã xác nhận
+  ACTIVE     // Đang thuê (đã nhận xe)
+  COMPLETED  // Đã hoàn thành
+  CANCELLED  // Đã hủy
+}
