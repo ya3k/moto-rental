@@ -55,14 +55,14 @@ export default function AdminLayout({
               {user?.email}
             </span>
             <Button 
-              variant="outline" 
-              className="text-black border-white hover:bg-primary/90"
+              variant="secondary" 
+              className="text-black border-white"
               onClick={() => signOut().then(() => router.push("/admin/login"))}
             >
               Đăng xuất
             </Button>
             <Link href="/">
-              <Button variant="outline" className="text-black border-white hover:bg-primary/90">
+              <Button variant="secondary" className="text-black border-white ">
                 Về Trang Chủ
               </Button>
             </Link>

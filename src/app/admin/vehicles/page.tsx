@@ -46,7 +46,7 @@ export default function AdminVehiclesPage() {
   const fetchVehicles = async () => {
     try {
       setLoading(true)
-      const response = await fetch("/api/vehicles")
+      const response = await fetch("/api/admin/vehicles")
       
       if (!response.ok) {
         throw new Error("Failed to fetch vehicles")
@@ -89,7 +89,7 @@ export default function AdminVehiclesPage() {
   const handleDeleteClick = async (id: string) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa xe này không?")) {
       try {
-        const response = await fetch(`/api/vehicles/${id}`, {
+        const response = await fetch(`/api/admin/vehicles/${id}`, {
           method: "DELETE",
         })
         
@@ -113,8 +113,8 @@ export default function AdminVehiclesPage() {
     
     try {
       const url = isEditMode 
-        ? `/api/vehicles/${currentVehicle.id}` 
-        : "/api/vehicles"
+        ? `/api/admin/vehicles/${currentVehicle.id}` 
+        : "/api/admin/vehicles"
       
       const method = isEditMode ? "PUT" : "POST"
       
